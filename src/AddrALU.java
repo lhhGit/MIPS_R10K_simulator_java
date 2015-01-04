@@ -1,6 +1,7 @@
 public class AddrALU extends ALU {
 	private Instruction stage1_instr;
 	private Instruction stage2_instr;
+	private AddressQueue addr_queue;
 
 	public void calc() {
 		stage2_instr = stage1_instr;
@@ -8,7 +9,7 @@ public class AddrALU extends ALU {
 			logger.addLog(stage2_instr, 'M');
 		}
 		// push in a new instruction
-		stage1_instr = upstream_queue.deliverInstruction();
+		stage1_instr = addr_queue.deliverInstruction();
 		if (stage1_instr != null) {
 			logger.addLog(stage1_instr, 'A');
 		}
@@ -24,7 +25,8 @@ public class AddrALU extends ALU {
 		return stage1_instr == null && stage2_instr == null;
 	}
 
-	AddrALU(Logger logger, InstructionQueue instr_queue, RegisterManager reg_mgr) {
-		super(logger, instr_queue, reg_mgr);
+	AddrALU(Logger logger, AddressQueue instr_queue, RegisterManager reg_mgr) {
+		super(logger, reg_mgr);
+		this.addr_queue = instr_queue;
 	}
 }

@@ -10,6 +10,7 @@ public class Instruction {
     public boolean isDone;
     public float result;
     public int oldDest;
+    public int idx;
     public Instruction() {
         logicalIdx = new int[OPERAND_COUNT];
         physicalIdx = new int[OPERAND_COUNT];

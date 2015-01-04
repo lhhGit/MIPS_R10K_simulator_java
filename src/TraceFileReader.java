@@ -28,6 +28,7 @@ public class TraceFileReader {
 	public void load(String filename) throws Exception {
 		  BufferedReader reader = new BufferedReader(new FileReader(filename));
 		  String line = null;
+		  int idx = 0;
 		  while ( (line=reader.readLine())!=null) {
 			  String[] segments = line.split(" ");
 			  Instruction instr = new Instruction();
@@ -36,7 +37,9 @@ public class TraceFileReader {
 	              instr.logicalIdx[i] = Integer.parseInt(segments[i+1]);
 	              instr.physicalIdx[i] = -1;
 	          }
+              instr.idx = idx;
 	          instrs.add(instr);
+	          idx++;
 		  }
 		  reader.close();
 	}

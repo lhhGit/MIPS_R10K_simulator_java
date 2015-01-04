@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,8 +24,9 @@ class Entry {
 
 class Logger {
 	private Map<Instruction, Entry> instr_log;
-	private int currentCycle = 0;
+	public int currentCycle = 0;
 	private List<Instruction> instr_list;
+	int max = 0;
 
 	Logger() {
 		instr_log = new HashMap<Instruction, Entry>();
@@ -37,20 +39,43 @@ class Logger {
 			instr_list.add(instr);
 		}
 		instr_log.get(instr).addAction(currentCycle, stage);
+		max = Math.max(max, currentCycle);
 	}
 
 	public void increment() {
 		currentCycle++;
 	}
 
-	public void print() {
+	public void print(PrintWriter writer) {
+		for (int i=0; i<11; i++)
+			writer.print(" ");
+		for (int i=0; i<=max; i++) {
+			writer.print(i);
+			writer.print("|");
+		}
+		writer.println();
 		for (Instruction instr : instr_list) {
 			Entry entry = instr_log.get(instr);
-			for (ActionTimePair at_pair : entry.pipeline_history) {
-				String str = String.format("%s,%d ", String.valueOf(at_pair.stage), at_pair.cycle);
-				System.out.print(str);
+			writer.print(String.valueOf(instr.intr_type)+" ");
+			for (int i=0; i<Instruction.OPERAND_COUNT; i++)
+				writer.print(String.format("%02d ",instr.logicalIdx[i]));
+		   	System.out.print(instr.idx+" ");
+			int i = 0;
+			while (!entry.pipeline_history.isEmpty()) {
+				if (i == entry.pipeline_history.get(0).cycle) {
+					writer.print(entry.pipeline_history.get(0).stage); 
+					System.out.print(String.format("%s,%d ", String.valueOf(entry.pipeline_history.get(0).stage), 
+							entry.pipeline_history.get(0).cycle));
+					entry.pipeline_history.remove(0);
+				} else {
+					writer.print(" ");
+				}
+				writer.print("|");
+				i++;
 			}
+			writer.println();
 			System.out.println();
 		}
+		writer.close();
 	}
 }

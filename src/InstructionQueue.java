@@ -2,7 +2,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class InstructionQueue extends Widget{
-	private Set<Instruction> instrs;
+	public Set<Instruction> instrs;
 	private RegisterManager regmgr;
 	private static final int CAPACITY = 16;
 	private char stage;
@@ -43,6 +43,7 @@ public class InstructionQueue extends Widget{
 	// registers
 	public void addInstruction(Instruction instr) {
 		instrs.add(instr);
+		System.out.println(instr.idx +" add: " + instrs.size());
 		logger.addLog(instr, stage);
 		// for the source registers, we don't assign the physical registers
 		for (int i = 0; i < 2; i++) {
@@ -61,9 +62,14 @@ public class InstructionQueue extends Widget{
 	// and remove it from instruction queue
 	// If multiple ready, which one should I choose?
 	Instruction deliverInstruction() {
+		if (logger.currentCycle == 32) {
+			System.out.println();
+		}
 		for (Instruction instr : instrs) {
 			if (isInstructionReady(instr)) {
 				instrs.remove(instr);
+				
+				System.out.println(instr.idx+" remove: " + instrs.size());
 				return instr;
 			}
 		}

@@ -33,8 +33,10 @@ public class RegisterManager extends Widget {
 	public void calc() {
 		while (!pending_queue.isEmpty()) {
 			Instruction instr = pending_queue.poll();
-			regValue[instr.physicalIdx[2]] = instr.result;
-			isBusy[instr.physicalIdx[2]] = false;
+			if (instr.physicalIdx[2] >= 0) {
+				regValue[instr.physicalIdx[2]] = instr.result;
+				isBusy[instr.physicalIdx[2]] = false;
+			}
 			instr.isDone = true;
 			if (instr.oldDest > 0) {
 				freelist.add(instr.oldDest);

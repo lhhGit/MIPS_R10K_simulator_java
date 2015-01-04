@@ -18,4 +18,10 @@ public class ALU extends Widget {
 		super(logger);
 		this.upstream_queue = instr_queue;
 	}
+	
+	ALU(Logger logger, RegisterManager reg_mgr) {
+		super(logger);
+		this.logger = logger;
+		this.reg_mgr = reg_mgr;
+	}
 };

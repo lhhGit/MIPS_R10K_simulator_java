@@ -37,7 +37,9 @@ class IntALU extends ALU {
 		return instr == null;
 	}
 
-	IntALU(Logger logger, InstructionQueue instr_queue, RegisterManager reg_mgr) {
+	IntALU(Logger logger, InstructionQueue instr_queue, RegisterManager reg_mgr,
+			ALU.ALUType type) {
 		super(logger, instr_queue, reg_mgr);
+		this.type = type;
 	}
-};
+}

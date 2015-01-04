@@ -2,8 +2,8 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class ActiveList {
-	private Queue<Instruction> myqueue;
-	private static final int CAPACITY = 16;
+	public Queue<Instruction> myqueue;
+	private static final int CAPACITY = 32;
 
 	ActiveList() {
 		myqueue = new ArrayDeque<Instruction>();
