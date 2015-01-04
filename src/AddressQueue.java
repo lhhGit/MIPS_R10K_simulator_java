@@ -1,22 +1,21 @@
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AddressQueue extends Widget {
 	
-	private Queue<Instruction> instrs;
+	private List<Instruction> instrs;
 	private static final int CAPACITY = 16;
 	public AddressQueue(Logger logger, RegisterManager reg_mgr) {
 		super(logger);
 		this.next = reg_mgr;
-		instrs = new ArrayDeque<Instruction>();
+		instrs = new ArrayList<Instruction>();
 		this.count = 1;
 		stage = 'I';
 	}
 
 	public void addInstruction(Instruction instr) {
 		instrs.add(instr);
-		//logger.addLog(instr, stage);
 		RegisterManager regmgr = (RegisterManager)next;
 		// for the source registers, we don't assign the physical registers
 		for (int i = 0; i < 2; i++) {
@@ -33,13 +32,23 @@ public class AddressQueue extends Widget {
 		regmgr.isBusy[instr.physicalIdx[2]] = true;
 		regmgr.physicalReg[instr.logicalIdx[2]] = instr.physicalIdx[2];
 	}
+	
+	void removeHead() {
+		if (!instrs.isEmpty()) {
+			instrs.remove(0);
+			System.out.println("addr queue size: "+instrs.size());
+		}
+	}
 		
 	public Instruction deliverInstruction() {
-		if (!instrs.isEmpty() && isInstructionReady(instrs.peek())) {
-			return instrs.poll();
-		} else {
-			return null;
+		for (int i=0; i<instrs.size(); i++) {
+			Instruction instr = instrs.get(i);
+			if (isInstructionReady(instrs.get(i)) 
+					&& !instrs.get(i).isAddrCalcuted) {
+				return instr;
+			}
 		}
+		return null;
 	}
 	
 	private boolean isInstructionReady(Instruction instr) {	

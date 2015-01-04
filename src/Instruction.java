@@ -10,6 +10,8 @@ public class Instruction {
     //instruction type
     public char intr_type;
     public boolean isDone;
+    //only useful for address command
+    public boolean isAddrCalcuted;
     public float result;
     public int oldDest;
     public int idx;

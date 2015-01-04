@@ -7,26 +7,28 @@ public class AddrALU extends ALU {
 		stage2_instr = stage1_instr;
 		if (stage2_instr != null) {
 			logger.addLog(stage2_instr, 'M');
+			stage2_instr.isDone = true;
 		}
 		// push in a new instruction
 		stage1_instr = addr_queue.deliverInstruction();
 		if (stage1_instr != null) {
+			stage1_instr.isAddrCalcuted = true;
 			logger.addLog(stage1_instr, 'A');
 		}
-
 	}
 
 	public void edge() {
-		if (stage2_instr != null)
-			reg_mgr.push(stage2_instr);
 	}
 
 	public boolean isEmpty() {
 		return stage1_instr == null && stage2_instr == null;
 	}
 
-	AddrALU(Logger logger, AddressQueue instr_queue, RegisterManager reg_mgr) {
-		super(logger, reg_mgr);
+	AddrALU(Logger logger, AddressQueue instr_queue, Committer committer, 
+			RegisterManager reg_mgr) {
+		super(logger);
 		this.addr_queue = instr_queue;
+		this.next = committer;
+		this.reg_mgr = reg_mgr;
 	}
 }

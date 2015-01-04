@@ -21,7 +21,10 @@ public class ALU extends Widget {
 	
 	ALU(Logger logger, RegisterManager reg_mgr) {
 		super(logger);
-		this.logger = logger;
 		this.reg_mgr = reg_mgr;
+	}
+	
+	ALU(Logger logger) {
+		super(logger);
 	}
 };

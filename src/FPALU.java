@@ -29,9 +29,6 @@ public class FPALU extends ALU {
 		// push in a new instruction
 		stage1_instr = upstream_queue.deliverInstruction();
 		if (stage1_instr != null) {
-			if(stage1_instr.idx == 15) {
-				System.out.println();
-			}
 			logger.addLog(stage1_instr, 'E');
 		}
 	}

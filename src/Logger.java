@@ -44,6 +44,7 @@ class Logger {
 
 	public void increment() {
 		currentCycle++;
+		System.out.println("cycle: "+currentCycle);
 	}
 
 	public void print(PrintWriter writer) {
