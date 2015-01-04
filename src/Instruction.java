@@ -12,6 +12,7 @@ public class Instruction {
     public boolean isDone;
     //only useful for address command
     public boolean isAddrCalcuted;
+    public int deliverCount;
     public float result;
     public int oldDest;
     public int idx;
@@ -38,5 +39,9 @@ public class Instruction {
                 return Type.INTEGER;
         }
         return Type.INTEGER;
+    }
+    
+    public boolean isDeliverd() {
+    	return deliverCount >=2;
     }
 }

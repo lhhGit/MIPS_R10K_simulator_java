@@ -58,7 +58,8 @@ public class Issuer extends Widget {
 			logger.addLog(instr, stage);
 			pending_queue.poll();
 			aclist.append(instr);
-			instr.oldDest = regmgr.physicalReg[instr.logicalIdx[2]];
+			if (instr.logicalIdx[2] >= 0)
+				instr.oldDest = regmgr.physicalReg[instr.logicalIdx[2]];
 		}
 	}
 

@@ -1,19 +1,22 @@
-public class AddrALU extends ALU {
-	private Instruction stage1_instr;
-	private Instruction stage2_instr;
-	private AddressQueue addr_queue;
+import java.util.HashSet;
+import java.util.Set;
 
-	public void calc() {
-		stage2_instr = stage1_instr;
-		if (stage2_instr != null) {
-			logger.addLog(stage2_instr, 'M');
-			stage2_instr.isDone = true;
+public class AddrALU extends ALU {
+	private Set<Instruction> instrs;
+	private AddressQueue addr_queue;
+	
+	public void calc() {	
+		Instruction instr = addr_queue.deliverInstruction();
+		if (instr!=null) {
+			instrs.add(instr);
 		}
-		// push in a new instruction
-		stage1_instr = addr_queue.deliverInstruction();
-		if (stage1_instr != null) {
-			stage1_instr.isAddrCalcuted = true;
-			logger.addLog(stage1_instr, 'A');
+		for (Instruction instruction :instrs) {
+			if (isInstructionReady(instruction)) {
+				instruction.isAddrCalcuted = true;
+				logger.addLog(instruction, stage);
+				instrs.remove(instruction);
+				return;
+			}
 		}
 	}
 
@@ -21,14 +24,28 @@ public class AddrALU extends ALU {
 	}
 
 	public boolean isEmpty() {
-		return stage1_instr == null && stage2_instr == null;
+		return instrs.isEmpty();
+	}
+	
+	private boolean isInstructionReady(Instruction instr) {
+		if (instr.intr_type == 'L') {
+			return instr.physicalIdx[0] < 0 || !reg_mgr.isBusy[instr.physicalIdx[0]];
+		} else {
+			for (int i = 0; i < 2; i++) {
+				if (instr.physicalIdx[i] >= 0 &&
+						reg_mgr.isBusy[instr.physicalIdx[i]]) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
-	AddrALU(Logger logger, AddressQueue instr_queue, Committer committer, 
-			RegisterManager reg_mgr) {
+	AddrALU(Logger logger, AddressQueue instr_queue, RegisterManager reg_mgr, char stage) {
 		super(logger);
 		this.addr_queue = instr_queue;
-		this.next = committer;
 		this.reg_mgr = reg_mgr;
+		this.stage = stage;
+		instrs = new HashSet<Instruction>();
 	}
 }

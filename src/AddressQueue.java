@@ -43,8 +43,8 @@ public class AddressQueue extends Widget {
 	public Instruction deliverInstruction() {
 		for (int i=0; i<instrs.size(); i++) {
 			Instruction instr = instrs.get(i);
-			if (isInstructionReady(instrs.get(i)) 
-					&& !instrs.get(i).isAddrCalcuted) {
+			if (!instrs.get(i).isDeliverd()) {
+				instr.deliverCount++;
 				return instr;
 			}
 		}
