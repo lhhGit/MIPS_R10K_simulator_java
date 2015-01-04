@@ -9,6 +9,7 @@ public class Instruction {
     public char intr_type;
     public boolean isDone;
     public float result;
+    public int oldDest;
     public Instruction() {
         logicalIdx = new int[OPERAND_COUNT];
         physicalIdx = new int[OPERAND_COUNT];

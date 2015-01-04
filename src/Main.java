@@ -14,9 +14,8 @@ public class Main {
 	    FPALU fp_mul = new FPALU(logger, fp_queue, reg_mgr, ALU.ALUType.MULTIPLY);
 	    IntALU int_alu = new IntALU(logger, integer_queue, reg_mgr);
 	    AddrALU addr_alu = new AddrALU(logger,  addr_queue, reg_mgr);
-	    Issuer issuer = new Issuer(logger, fp_queue, addr_queue, integer_queue,
-	                  aclist, reg_mgr, MAX_COUNT, 'I');
-	    Widget decoder = new Widget(logger, issuer, MAX_COUNT, 'D');
+	    Decoder decoder = new Decoder(logger, fp_queue, addr_queue, integer_queue,
+	                  aclist, reg_mgr, MAX_COUNT, 'D');
 	    Fetcher fetcher = new Fetcher(logger, reader, decoder, MAX_COUNT, 'F');
 		try {
 			reader.load("test1.trace");
@@ -24,6 +23,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		int i = 0;
 	    do {
 	        committer.calc();
 	        reg_mgr.calc();
@@ -31,13 +31,19 @@ public class Main {
 	        fp_mul.calc();
 	        int_alu.calc();
 	        addr_alu.calc();
-	        issuer.calc();
+	        fp_queue.calc();
+	        integer_queue.calc();
+	        addr_queue.calc();
+	        decoder.calc();
 	        decoder.calc();
 	        fetcher.calc();
 	        
 	        fetcher.edge();
 	        decoder.edge();
-	        issuer.edge();
+	        decoder.edge();
+	        fp_queue.edge();
+	        integer_queue.edge();
+	        addr_queue.edge();
 	        fp_add.edge();
 	        fp_mul.edge();
 	        int_alu.edge();
@@ -45,13 +51,15 @@ public class Main {
 	        reg_mgr.edge();
 	        committer.edge();
 	        logger.increment();
+	        i++;
 	    } while ( !committer.isEmpty() ||
-	              !reg_mgr.isEmpty() ||
 	              !fp_add.isEmpty() ||
 	              !fp_mul.isEmpty() ||
 	              !int_alu.isEmpty() ||
 	              !addr_alu.isEmpty() ||
-	              !issuer.isEmpty() ||
+	              !fp_queue.isEmpty() ||
+	  	          !integer_queue.isEmpty() || 
+	  	          !addr_queue.isEmpty() ||
 	              !decoder.isEmpty() ||
 	              !fetcher.isEmpty());
 	    logger.print();

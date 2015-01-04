@@ -1,11 +1,10 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class InstructionQueue {
+public class InstructionQueue extends Widget{
 	private Set<Instruction> instrs;
 	private RegisterManager regmgr;
 	private static final int CAPACITY = 16;
-	private Logger logger;
 	private char stage;
 
 	private boolean isInstructionReady(Instruction instr) {
@@ -19,14 +18,24 @@ public class InstructionQueue {
 	}
 
 	public InstructionQueue(Logger logger, RegisterManager regmgr) {
+		super(logger);
 		this.regmgr = regmgr;
 		instrs = new HashSet<Instruction>();
 		this.logger = logger;
 		stage = 'I';
+		this.count = 1;
 	}
 
 	public boolean isFull() {
 		return instrs.size() == CAPACITY;
+	}
+	
+	public void calc() {
+		int i = 0; 
+		while (!pending_queue.isEmpty() && i < count ) {
+			addInstruction(pending_queue.poll());
+			i++;
+		}
 	}
 
 	// for a decoded instruction, adding into the instruction queue and

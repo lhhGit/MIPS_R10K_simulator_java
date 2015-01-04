@@ -36,13 +36,15 @@ public class RegisterManager extends Widget {
 			regValue[instr.physicalIdx[2]] = instr.result;
 			isBusy[instr.physicalIdx[2]] = false;
 			instr.isDone = true;
-			freelist.add(instr.physicalIdx[2]);
+			if (instr.oldDest > 0) {
+				freelist.add(instr.oldDest);
+			}
 			logger.addLog(instr, stage);
 		}
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return freelist.size() == PHYSICAL_COUNT;
+		return true;
 	}
 }

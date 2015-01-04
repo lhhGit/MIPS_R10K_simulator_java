@@ -24,7 +24,8 @@ public class Widget {
 	}
 
 	void edge() {
-		while (!completed_queue.isEmpty()) {
+		int i=0; 
+		while (!completed_queue.isEmpty() && i<count) {
 			next.push(completed_queue.poll());
 		}
 	}
