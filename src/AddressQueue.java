@@ -19,16 +19,19 @@ public class AddressQueue extends Widget {
 		//logger.addLog(instr, stage);
 		RegisterManager regmgr = (RegisterManager)next;
 		// for the source registers, we don't assign the physical registers
-		instr.physicalIdx[1] = regmgr.physicalReg[instr.logicalIdx[1]];
+		for (int i = 0; i < 2; i++) {
+			if (instr.logicalIdx[i] == -1) continue;
+			instr.physicalIdx[i] = regmgr.physicalReg[instr.logicalIdx[i]];
+		}
 		
 		if (instr.intr_type == 'S') return;
 		
 		// for the target register, we will create a new mapping,
 		// we may run out of physical registers
-		instr.physicalIdx[0] = regmgr.freelist.poll();
+		instr.physicalIdx[2] = regmgr.freelist.poll();
 		// mark the register as busy
-		regmgr.isBusy[instr.physicalIdx[0]] = true;
-		regmgr.physicalReg[instr.logicalIdx[0]] = instr.physicalIdx[0];
+		regmgr.isBusy[instr.physicalIdx[2]] = true;
+		regmgr.physicalReg[instr.logicalIdx[2]] = instr.physicalIdx[2];
 	}
 		
 	public Instruction deliverInstruction() {
@@ -41,9 +44,17 @@ public class AddressQueue extends Widget {
 	
 	private boolean isInstructionReady(Instruction instr) {	
 		RegisterManager regmgr = (RegisterManager)next;
-		return (instr.intr_type == 'L' && (instr.physicalIdx[1] < 0 || !regmgr.isBusy[instr.physicalIdx[1]])) 
-				||
-			   (instr.intr_type == 'S' && (instr.physicalIdx[0] < 0 || !regmgr.isBusy[instr.physicalIdx[0]]));
+		if (instr.intr_type == 'L') {
+			return instr.physicalIdx[0] < 0 || !regmgr.isBusy[instr.physicalIdx[0]];
+		} else {
+			for (int i = 0; i < 2; i++) {
+				if (instr.physicalIdx[i] >= 0 &&
+						regmgr.isBusy[instr.physicalIdx[i]]) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 	
 	public boolean isFull() {

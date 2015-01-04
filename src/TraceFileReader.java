@@ -33,9 +33,17 @@ public class TraceFileReader {
 			  String[] segments = line.split(" ");
 			  Instruction instr = new Instruction();
 	          instr.intr_type = segments[0].charAt(0);
-	          for (int i=0; i<Instruction.OPERAND_COUNT; i++) {
-	              instr.logicalIdx[i] = Integer.parseInt(segments[i+1]);
-	              instr.physicalIdx[i] = -1;
+	          if (instr.intr_type == 'M' || instr.intr_type == 'I' ||
+	        		  instr.intr_type == 'A') {
+		          for (int i=0; i<Instruction.OPERAND_COUNT; i++) {
+		              instr.logicalIdx[i] = Integer.parseInt(segments[i+1]);
+		          }
+	          } else if (instr.intr_type == 'L') {
+	        	  instr.logicalIdx[2] = Integer.parseInt(segments[1]);
+	        	  instr.logicalIdx[0] = Integer.parseInt(segments[2]);
+	          } else if (instr.intr_type == 'S') {
+	        	  instr.logicalIdx[0] = Integer.parseInt(segments[1]);
+	        	  instr.logicalIdx[1] = Integer.parseInt(segments[2]);
 	          }
               instr.idx = idx;
 	          instrs.add(instr);

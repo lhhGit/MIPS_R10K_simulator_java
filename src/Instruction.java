@@ -2,6 +2,8 @@
 public class Instruction {
 	enum Type {ADDR, FLOAT, INTEGER};
 	public static final int OPERAND_COUNT = 3;
+	
+	//the last idx always correspond to the register to be modified
 	public int[] logicalIdx;
     public int[]  physicalIdx;
     public int  ALTag;
@@ -14,6 +16,11 @@ public class Instruction {
     public Instruction() {
         logicalIdx = new int[OPERAND_COUNT];
         physicalIdx = new int[OPERAND_COUNT];
+        for (int i=0; i<OPERAND_COUNT; i++) {
+        	logicalIdx[i] = -1;
+        	physicalIdx[i] = -1;
+        }
+        
         ALTag = -1;
     }
     
