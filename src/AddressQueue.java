@@ -14,17 +14,9 @@ public class AddressQueue extends Widget {
 		stage = 'I';
 	}
 
-	public void calc() {
-		int i = 0; 
-		while (!pending_queue.isEmpty() && i < count ) {
-			addInstruction(pending_queue.poll());
-			i++;
-		}
-	}
-	
 	public void addInstruction(Instruction instr) {
 		instrs.add(instr);
-		logger.addLog(instr, stage);
+		//logger.addLog(instr, stage);
 		RegisterManager regmgr = (RegisterManager)next;
 		// for the source registers, we don't assign the physical registers
 		instr.physicalIdx[1] = regmgr.physicalReg[instr.logicalIdx[1]];

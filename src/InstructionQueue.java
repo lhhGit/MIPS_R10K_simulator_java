@@ -30,21 +30,13 @@ public class InstructionQueue extends Widget{
 		return instrs.size() == CAPACITY;
 	}
 	
-	public void calc() {
-		int i = 0; 
-		while (!pending_queue.isEmpty() && i < count ) {
-			addInstruction(pending_queue.poll());
-			i++;
-		}
-	}
-
 	// for a decoded instruction, adding into the instruction queue and
 	// active list, creates the mapping between logical and physical
 	// registers
 	public void addInstruction(Instruction instr) {
 		instrs.add(instr);
 		System.out.println(instr.idx +" add: " + instrs.size());
-		logger.addLog(instr, stage);
+		//logger.addLog(instr, stage);
 		// for the source registers, we don't assign the physical registers
 		for (int i = 0; i < 2; i++) {
 			instr.physicalIdx[i] = regmgr.physicalReg[instr.logicalIdx[i]];

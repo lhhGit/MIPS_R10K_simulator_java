@@ -9,7 +9,7 @@ public class Main {
 		TraceFileReader reader = new TraceFileReader();
 	    ActiveList aclist = new ActiveList();
 	    Logger logger = new Logger();
-	    int MAX_COUNT = 1;
+	    int MAX_COUNT = 4;
 	    Committer committer = new Committer(logger, aclist, MAX_COUNT, 'C');
 	    RegisterManager reg_mgr = new RegisterManager(logger, committer, 'W');
 	    InstructionQueue fp_queue = new InstructionQueue(logger, reg_mgr);
@@ -19,13 +19,15 @@ public class Main {
 	    FPALU fp_mul = new FPALU(logger, fp_queue, reg_mgr, ALU.ALUType.MULTIPLY);
 	    IntALU int_alu = new IntALU(logger, integer_queue, reg_mgr,ALU.ALUType.ADD);
 	    AddrALU addr_alu = new AddrALU(logger,  addr_queue, reg_mgr);
-	    Decoder decoder = new Decoder(logger, fp_queue, addr_queue, integer_queue,
-	                  aclist, reg_mgr, MAX_COUNT, 'D');
+	    Issuer issuer = new Issuer(logger, fp_queue, addr_queue, integer_queue,
+	                  aclist, reg_mgr, MAX_COUNT, 'I');
+	    Widget decoder = new Widget(logger, issuer, MAX_COUNT, 'D');
 	    Fetcher fetcher = new Fetcher(logger, reader, decoder, MAX_COUNT, 'F');
 	    
 	    List<Widget> components = new ArrayList<Widget>();
 	    components.add(fetcher);
 	    components.add(decoder);
+	    components.add(issuer);
 	    components.add(fp_queue);
 	    components.add(integer_queue);
 	    components.add(addr_queue);
